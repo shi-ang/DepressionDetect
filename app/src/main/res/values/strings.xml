@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">DepressionDetect</string>
+    <string name="age_under_18">age: under 18</string>
+    <string name="age_18_24">age: 18–24</string>
+    <string name="age_25_34">age: 25–34</string>
+    <string name="age_35_44">age: 35–44</string>
+    <string name="age_45_54">age: 45–54</string>
+    <string name="age_55_64">age: 55–64</string>
+    <string name="age_over_64">age: 65+</string>
+    <string name="ethnicity_caucasian">Caucasian</string>
+    <string name="ethnicity_black_african">Black African</string>
+    <string name="ethnicity_east_asian">East Asian</string>
+    <string name="ethnicity_south_asian">South Asian</string>
+    <string name="ethnicity_hispanic">Hispanic</string>
+    <string name="insufficient_permissions">Insufficient Permissions</string>
+    <string name="permissions_camera_needed_explanation">This app requires the permission to access your camera to be able to gather facial images for processing. No video is saved or used other than for immediate emotion processing.</string>
+    <string name="permissions_audio_needed_explanation">This app requires the permission to access your audio to be able to gather voice information for processing. No audio is saved or used other than for immediate emotion processing.</string>
+    <string name="permissions_storage_needed_explanation">This app requires the permission to access your external storage to save screenshots.</string>
+    <string name="understood">Understood</string>
+    <string name="not_found">Sorry, AffdexMe requires the use of a front-facing camera, which was not found on your device.</string>
+    <string name="loading">Loading&#8230;</string>
+</resources>
