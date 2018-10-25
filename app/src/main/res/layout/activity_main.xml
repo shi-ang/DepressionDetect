@@ -5,7 +5,6 @@
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_alignParentStart="true"
     tools:context=".MainActivity">
 
     <Button
@@ -14,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:textSize="12sp"
         android:layout_marginStart="0dp"
         android:layout_marginTop="0dp" />
 
@@ -21,178 +21,204 @@
         android:id="@+id/front_back_toggle_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/sdk_start_button"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="50dp"
-        android:padding="5dp"
-        android:textOff="FRONT"
-        android:textOn="BACK" />
+        android:textSize="12sp"
+        android:textOff="@string/frontText"
+        android:textOn="@string/backText" />
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/joy_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="0dp"
-            android:layout_marginEnd="0dp"
-            tools:text="joy" />
-
-        <TextView
-            android:id="@+id/sadness_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="0dp"
-            tools:text="Sadness" />
-
-        <TextView
-            android:id="@+id/anger_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="60dp"
-            android:layout_marginEnd="0dp"
-            tools:text="anger" />
-
-        <TextView
-            android:id="@+id/contempt_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="90dp"
-            android:layout_marginEnd="0dp"
-            tools:text="contempt" />
-
-        <TextView
-            android:id="@+id/disgust_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="120dp"
-            android:layout_marginEnd="0dp"
-            tools:text="disgust" />
-
-        <TextView
-            android:id="@+id/engagement_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="150dp"
-            android:layout_marginEnd="0dp"
-            tools:text="engagement" />
-
-        <TextView
-            android:id="@+id/fear_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="180dp"
-            android:layout_marginEnd="0dp"
-            tools:text="fear" />
-
-        <TextView
-            android:id="@+id/surprise_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="210dp"
-            android:layout_marginEnd="0dp"
-            tools:text="surprise" />
-
-        <TextView
-            android:id="@+id/valence_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="240dp"
-            android:layout_marginEnd="0dp"
-            tools:text="valence" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/age_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="270dp"
-            android:layout_marginEnd="0dp"
+            android:textSize="12sp"
+            android:layout_gravity="center_horizontal"
             tools:text="age" />
 
         <TextView
             android:id="@+id/ethnicity_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="300dp"
-            android:layout_marginEnd="0dp"
+            android:textSize="12sp"
+            android:layout_gravity="center_horizontal"
             tools:text="ethnicity" />
-    </RelativeLayout>
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/audio_happiness_textview"
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/joy_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:lines="2"
+            android:textColor="@color/fireBrick"
+            tools:text="joy" />
+
+        <TextView
+            android:id="@+id/sadness_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:lines="2"
+            android:textColor="@color/fireBrick"
+            tools:text="sadness" />
+
+        <TextView
+            android:id="@+id/anger_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:lines="2"
+            android:textColor="@color/fireBrick"
+            tools:text="anger" />
+
+        <TextView
+            android:id="@+id/contempt_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:lines="2"
+            android:textColor="@color/fireBrick"
+            tools:text="contempt" />
+
+        <TextView
+            android:id="@+id/disgust_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:lines="2"
+            android:textColor="@color/fireBrick"
+            tools:text="disgust" />
+
+        <TextView
+            android:id="@+id/engagement_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:lines="2"
+            android:textColor="@color/fireBrick"
+            tools:text="engagement" />
+
+        <TextView
+            android:id="@+id/fear_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:lines="2"
+            android:textColor="@color/fireBrick"
+            tools:text="fear" />
+
+        <TextView
+            android:id="@+id/surprise_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:lines="2"
+            android:textColor="@color/fireBrick"
+            tools:text="surprise" />
+
+        <TextView
+            android:id="@+id/valence_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:lines="2"
+            android:textColor="@color/fireBrick"
+            tools:text="valence" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginBottom="120dp"
-        tools:text="happiness" />
+        android:layout_alignParentStart="true"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/audio_neutrality_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginBottom="90dp"
-        tools:text="neutrality" />
+        <TextView
+            android:id="@+id/audio_happiness_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_gravity="start"
+            android:textColor="@color/gold"
+            android:lines="2"
+            tools:text="happiness" />
 
-    <TextView
-        android:id="@+id/audio_anger_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginBottom="60dp"
-        tools:text="anger" />
+        <TextView
+            android:id="@+id/audio_neutrality_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_gravity="start"
+            android:textColor="@color/gold"
+            android:lines="2"
+            tools:text="neutrality" />
 
-    <TextView
-        android:id="@+id/audio_sadness_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginBottom="30dp"
-        tools:text="sadness" />
+        <TextView
+            android:id="@+id/audio_anger_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_gravity="start"
+            android:textColor="@color/gold"
+            android:lines="2"
+            tools:text="anger" />
 
-    <TextView
-        android:id="@+id/audio_fear_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginBottom="0dp"
-        tools:text="fear" />
+        <TextView
+            android:id="@+id/audio_sadness_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_gravity="start"
+            android:textColor="@color/gold"
+            android:lines="2"
+            tools:text="sadness" />
+
+        <TextView
+            android:id="@+id/audio_fear_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_gravity="start"
+            android:textColor="@color/gold"
+            android:lines="2"
+            tools:text="fear" />
+
+    </LinearLayout>
 
 
     <!--    <RelativeLayout

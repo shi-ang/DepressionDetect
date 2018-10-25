@@ -24,7 +24,8 @@ import com.affectiva.android.affdex.sdk.Frame;
 import com.affectiva.android.affdex.sdk.detector.CameraDetector;
 import com.affectiva.android.affdex.sdk.detector.Detector;
 import com.affectiva.android.affdex.sdk.detector.Face;
-//import vokaturi.vokaturisdk.entities.EmotionProbabilities;
+
+import vokaturi.vokaturisdk.entities.EmotionProbabilities;
 
 import java.util.List;
 
@@ -36,20 +37,35 @@ import java.util.List;
  *
  * For use with SDK 2.02
  */
-public class MainActivity extends Activity implements Detector.ImageListener, CameraDetector.CameraEventListener {
+public class MainActivity extends Activity implements Detector.ImageListener, CameraDetector.CameraEventListener, UpdatableActivity {
 
     final String LOG_TAG = "shiangMessage";
 
-    //private AudioListenerService audioListenerService = AudioListenerService.getInstance();
+    private AudioListenerService audioListenerService = AudioListenerService.getInstance();
 
     Button startSDKButton;
     ToggleButton toggleButton;
     Button surfaceViewVisibilityButton;
 
     TextView joyTextView;
+    TextView sadnessTextView;
+    TextView angerTextView;
+    TextView contemptTextView;
+    TextView disgustTextView;
+    TextView engagementTextView;
+    TextView fearTextView;
+    TextView surpriseTextView;
+    TextView valenceTextView;
+
     TextView ageTextView;
     TextView ethnicityTextView;
+
+    TextView audioHappinessTextView;
     TextView audioNeutralityTextView;
+    TextView audioAngerTextView;
+    TextView audioSadnessTextView;
+    TextView audioFearTextView;
+
 
     SurfaceView cameraPreview;
 
@@ -75,25 +91,30 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
         setContentView(R.layout.activity_main);
 
         joyTextView = (TextView) findViewById(R.id.joy_textview);
+        sadnessTextView = (TextView) findViewById(R.id.sadness_textview);
+        angerTextView = (TextView) findViewById(R.id.anger_textView);
+        contemptTextView = (TextView) findViewById(R.id.contempt_textView);
+        disgustTextView = (TextView) findViewById(R.id.disgust_textView);
+        engagementTextView = (TextView) findViewById(R.id.engagement_textView);
+        fearTextView = (TextView) findViewById(R.id.fear_textView);
+        surpriseTextView = (TextView) findViewById(R.id.surprise_textView);
+        valenceTextView = (TextView) findViewById(R.id.valence_textView);
+
         ageTextView = (TextView) findViewById(R.id.age_textview);
         ethnicityTextView = (TextView) findViewById(R.id.ethnicity_textview);
-        audioNeutralityTextView = (TextView) findViewById(R.id.audio_neutrality_textview);
 
-        /*try {
+        audioHappinessTextView = (TextView) findViewById(R.id.audio_happiness_textview);
+        audioNeutralityTextView = (TextView) findViewById(R.id.audio_neutrality_textview);
+        audioAngerTextView = (TextView) findViewById(R.id.audio_anger_textview);
+        audioSadnessTextView = (TextView) findViewById(R.id.audio_sadness_textview);
+        audioFearTextView = (TextView) findViewById(R.id.audio_fear_textview);
+
+        try {
             audioListenerService.updatableActivities.add(this);
             audioListenerService.start();;
         } catch (Exception e) {
             Log.e(LOG_TAG, e.getMessage());
-        }*/
-
-        toggleButton = (ToggleButton) findViewById(R.id.front_back_toggle_button);
-        toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                isCameraBack = isChecked;
-                switchCamera(isCameraBack? CameraDetector.CameraType.CAMERA_BACK : CameraDetector.CameraType.CAMERA_FRONT);
-            }
-        });
+        }
 
         startSDKButton = (Button) findViewById(R.id.sdk_start_button);
         startSDKButton.setText("Start Camera");
@@ -112,6 +133,14 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
             }
         });
 
+        toggleButton = (ToggleButton) findViewById(R.id.front_back_toggle_button);
+        toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                isCameraBack = isChecked;
+                switchCamera(isCameraBack? CameraDetector.CameraType.CAMERA_BACK : CameraDetector.CameraType.CAMERA_FRONT);
+            }
+        });
 
         //We create a custom SurfaceView that resizes itself to match the aspect ratio of the incoming camera frames
         mainLayout = (RelativeLayout) findViewById(R.id.main_layout);
@@ -142,6 +171,7 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
         };
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.CENTER_IN_PARENT,RelativeLayout.TRUE);
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,RelativeLayout.TRUE);
         cameraPreview.setLayoutParams(params);
         mainLayout.addView(cameraPreview,0);
 
@@ -152,7 +182,7 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
 
 
         detector = new CameraDetector(this, CameraDetector.CameraType.CAMERA_FRONT, cameraPreview);
-        detector.setDetectJoy(true);
+        detector.setDetectAllEmotions(true);
         detector.setDetectAge(true);
         detector.setDetectEthnicity(true);
         detector.setImageListener(this);
@@ -297,11 +327,27 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
             return;
         if (list.size() == 0) {
             joyTextView.setText("NO FACE");
+            sadnessTextView.setText("");
+            angerTextView.setText("");
+            contemptTextView.setText("");
+            disgustTextView.setText("");
+            engagementTextView.setText("");
+            fearTextView.setText("");
+            surpriseTextView.setText("");
+            valenceTextView.setText("");
             ageTextView.setText("");
             ethnicityTextView.setText("");
         } else {
             Face face = list.get(0);
             joyTextView.setText(String.format("JOY\n%.2f",face.emotions.getJoy()));
+            sadnessTextView.setText(String.format("SADNESS\n%.2f",face.emotions.getSadness()));
+            angerTextView.setText(String.format("ANGER\n%.2f",face.emotions.getAnger()));
+            contemptTextView.setText(String.format("CONTEMPT\n%.2f",face.emotions.getContempt()));
+            disgustTextView.setText(String.format("DISGUST\n%.2f",face.emotions.getDisgust()));
+            engagementTextView.setText(String.format("ENGAGEMENT\n%.2f",face.emotions.getEngagement()));
+            fearTextView.setText(String.format("FEAR\n%.2f",face.emotions.getFear()));
+            surpriseTextView.setText(String.format("SURPRISE\n%.2f",face.emotions.getSurprise()));
+            valenceTextView.setText(String.format("VALENCE\n%.2f",face.emotions.getValence()));
             switch (face.appearance.getAge()) {
                 case AGE_UNKNOWN:
                     ageTextView.setText("");
@@ -366,8 +412,12 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
         cameraPreview.requestLayout();
     }
 
-    /*@Override
+    @Override
     public void updateBars(EmotionProbabilities emotionProbabilities) {
+        audioHappinessTextView.setText(String.format("Happiness\n%.2f",(float)emotionProbabilities.happiness));
         audioNeutralityTextView.setText(String.format("Neutrality\n%.2f",(float)emotionProbabilities.neutrality));
-    }*/
+        audioAngerTextView.setText(String.format("Anger\n%.2f",(float)emotionProbabilities.anger));
+        audioSadnessTextView.setText(String.format("Sadness\n%.2f",(float)emotionProbabilities.sadness));
+        audioFearTextView.setText(String.format("Fear\n%.2f",(float)emotionProbabilities.fear));
+    }
 }

@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name">DepressionDetect</string>
-    <string name="age_under_18">age: under 18</string>
-    <string name="age_18_24">age: 18–24</string>
-    <string name="age_25_34">age: 25–34</string>
-    <string name="age_35_44">age: 35–44</string>
-    <string name="age_45_54">age: 45–54</string>
-    <string name="age_55_64">age: 55–64</string>
-    <string name="age_over_64">age: 65+</string>
+    <string name="age_under_18">Age: under 18</string>
+    <string name="age_18_24">Age: 18–24</string>
+    <string name="age_25_34">Age: 25–34</string>
+    <string name="age_35_44">Age: 35–44</string>
+    <string name="age_45_54">Age: 45–54</string>
+    <string name="age_55_64">Age: 55–64</string>
+    <string name="age_over_64">Age: 65+</string>
     <string name="ethnicity_caucasian">Caucasian</string>
     <string name="ethnicity_black_african">Black African</string>
     <string name="ethnicity_east_asian">East Asian</string>
@@ -19,4 +19,6 @@
     <string name="understood">Understood</string>
     <string name="not_found">Sorry, AffdexMe requires the use of a front-facing camera, which was not found on your device.</string>
     <string name="loading">Loading&#8230;</string>
+    <string name="frontText">FRONT</string>
+    <string name="backText">BACK</string>
 </resources>
