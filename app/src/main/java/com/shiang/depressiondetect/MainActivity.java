@@ -1,6 +1,7 @@
 package com.shiang.depressiondetect;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -90,24 +91,24 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        joyTextView = (TextView) findViewById(R.id.joy_textview);
-        sadnessTextView = (TextView) findViewById(R.id.sadness_textview);
-        angerTextView = (TextView) findViewById(R.id.anger_textView);
-        contemptTextView = (TextView) findViewById(R.id.contempt_textView);
-        disgustTextView = (TextView) findViewById(R.id.disgust_textView);
-        engagementTextView = (TextView) findViewById(R.id.engagement_textView);
-        fearTextView = (TextView) findViewById(R.id.fear_textView);
-        surpriseTextView = (TextView) findViewById(R.id.surprise_textView);
-        valenceTextView = (TextView) findViewById(R.id.valence_textView);
+        joyTextView = findViewById(R.id.joy_textview);
+        sadnessTextView = findViewById(R.id.sadness_textview);
+        angerTextView = findViewById(R.id.anger_textView);
+        contemptTextView = findViewById(R.id.contempt_textView);
+        disgustTextView = findViewById(R.id.disgust_textView);
+        engagementTextView = findViewById(R.id.engagement_textView);
+        fearTextView = findViewById(R.id.fear_textView);
+        surpriseTextView = findViewById(R.id.surprise_textView);
+        valenceTextView = findViewById(R.id.valence_textView);
 
-        ageTextView = (TextView) findViewById(R.id.age_textview);
-        ethnicityTextView = (TextView) findViewById(R.id.ethnicity_textview);
+        ageTextView = findViewById(R.id.age_textview);
+        ethnicityTextView = findViewById(R.id.ethnicity_textview);
 
-        audioHappinessTextView = (TextView) findViewById(R.id.audio_happiness_textview);
-        audioNeutralityTextView = (TextView) findViewById(R.id.audio_neutrality_textview);
-        audioAngerTextView = (TextView) findViewById(R.id.audio_anger_textview);
-        audioSadnessTextView = (TextView) findViewById(R.id.audio_sadness_textview);
-        audioFearTextView = (TextView) findViewById(R.id.audio_fear_textview);
+        audioHappinessTextView = findViewById(R.id.audio_happiness_textview);
+        audioNeutralityTextView = findViewById(R.id.audio_neutrality_textview);
+        audioAngerTextView = findViewById(R.id.audio_anger_textview);
+        audioSadnessTextView = findViewById(R.id.audio_sadness_textview);
+        audioFearTextView = findViewById(R.id.audio_fear_textview);
 
         try {
             audioListenerService.updatableActivities.add(this);
@@ -116,24 +117,24 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
             Log.e(LOG_TAG, e.getMessage());
         }
 
-        startSDKButton = (Button) findViewById(R.id.sdk_start_button);
-        startSDKButton.setText("Start Camera");
+        startSDKButton = findViewById(R.id.sdk_start_button);
+        startSDKButton.setText(R.string.startCamera);
         startSDKButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isSDKStarted) {
                     isSDKStarted = false;
                     stopDetector();
-                    startSDKButton.setText("Start Camera");
+                    startSDKButton.setText(R.string.startCamera);
                 } else {
                     isSDKStarted = true;
                     startDetector();
-                    startSDKButton.setText("Stop Camera");
+                    startSDKButton.setText(R.string.stopCamera);
                 }
             }
         });
 
-        toggleButton = (ToggleButton) findViewById(R.id.front_back_toggle_button);
+        toggleButton = findViewById(R.id.front_back_toggle_button);
         toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -143,7 +144,7 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
         });
 
         //We create a custom SurfaceView that resizes itself to match the aspect ratio of the incoming camera frames
-        mainLayout = (RelativeLayout) findViewById(R.id.main_layout);
+        mainLayout = findViewById(R.id.main_layout);
         cameraPreview = new SurfaceView(this) {
             @Override
             public void onMeasure(int widthSpec, int heightSpec) {
@@ -321,12 +322,13 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
         detector.setCameraType(type);
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void onImageResults(List<Face> list, Frame frame, float v) {
         if (list == null)
             return;
         if (list.size() == 0) {
-            joyTextView.setText("NO FACE");
+            joyTextView.setText(R.string.noFace);
             sadnessTextView.setText("");
             angerTextView.setText("");
             contemptTextView.setText("");

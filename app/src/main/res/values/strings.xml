@@ -21,4 +21,7 @@
     <string name="loading">Loading&#8230;</string>
     <string name="frontText">FRONT</string>
     <string name="backText">BACK</string>
+    <string name="noFace">NO FACE</string>
+    <string name="startCamera">Start Camera</string>
+    <string name="stopCamera">Stop Camera</string>
 </resources>
