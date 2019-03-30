@@ -538,6 +538,11 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
         }
     }
 
+    /**
+     *
+     * @param textView
+     * @param face
+     */
     void updateMetricValue(TextView textView, Face face){
 
     }
