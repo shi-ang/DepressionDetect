@@ -24,4 +24,7 @@
     <string name="noFace">NO FACE</string>
     <string name="startCamera">Start Camera</string>
     <string name="stopCamera">Stop Camera</string>
+    <string name="choose_metrics_message">Choose 6 emotions or expressions below to display on the main screen</string>
+    <string name="metric_chooser_default_message">0 metrics chosen</string>
+    <string name="clear_all">CLEAR ALL</string>
 </resources>

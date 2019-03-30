@@ -1,4 +1,4 @@
-package com.shiang.depressiondetect;
+package com.shiang.depressiondetect.vokaturi.vokaturisdk;
 
 import android.media.AudioFormat;
 import android.media.AudioRecord;
@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 import vokaturi.vokaturisdk.entities.EmotionProbabilities;
 import vokaturi.vokaturisdk.entities.Voice;
-import com.shiang.depressiondetect.UpdatableActivity;
 
 /**
  * Singleton service used to retrieve microphone data and update existing activities accordingly

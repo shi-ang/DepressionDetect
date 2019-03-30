@@ -1,4 +1,4 @@
-package com.shiang.depressiondetect;
+package com.shiang.depressiondetect.vokaturi.vokaturisdk;
 
 import vokaturi.vokaturisdk.entities.EmotionProbabilities;
 

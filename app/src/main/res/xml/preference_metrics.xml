@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Preference
+        android:selectable="false"
+        android:layout="@layout/activity_setting">
+
+    </Preference>
+
+    <PreferenceCategory
+        android:key="emotion"
+        android:title="Emotion Category">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="joy"
+            android:title="JOY"
+            android:summary="Enable or disable detecting joy"/>
+
+        <!--
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="joy"
+            android:title="JOY"
+            android:summary="Enable or disable detecting joy"/>
+        -->
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="anger"
+            android:title="ANGER"
+            android:summary="Enable or disable detecting anger"/>
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="fear"
+            android:title="FEAR"
+            android:summary="Enable or disable detecting fear"/>
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="disgust"
+            android:title="DISGUST"
+            android:summary="Enable or disable detecting disgust"/>
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="sadness"
+            android:title="SADNESS"
+            android:summary="Enable or disable detecting sadness">
+
+        </CheckBoxPreference>
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="surprise"
+            android:title="SURPRISE"
+            android:summary="Enable or disable detecting surprise">
+
+        </CheckBoxPreference>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="contempt"
+            android:title="CONTEMPT"
+            android:summary="Enable or disable detecting contempt">
+
+        </CheckBoxPreference>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="engagement"
+            android:title="ENGAGEMENT"
+            android:summary="Enable or disable detecting engagement">
+
+        </CheckBoxPreference>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="valence"
+            android:title="VALENCE"
+            android:summary="Enable or disable detecting valence">
+
+        </CheckBoxPreference>
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory
+        android:key="expression"
+        android:title="Expression Category">
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="joy"
+            android:title="Joy"
+            android:summary="Enable or disable detecting joy">
+
+        </CheckBoxPreference>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="joy"
+            android:title="Joy"
+            android:summary="Enable or disable detecting joy">
+
+        </CheckBoxPreference>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="joy"
+            android:title="Joy"
+            android:summary="Enable or disable detecting joy">
+
+        </CheckBoxPreference>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="joy"
+            android:title="Joy"
+            android:summary="Enable or disable detecting joy">
+
+        </CheckBoxPreference>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="joy"
+            android:title="Joy"
+            android:summary="Enable or disable detecting joy">
+
+        </CheckBoxPreference>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="joy"
+            android:title="Joy"
+            android:summary="Enable or disable detecting joy">
+
+        </CheckBoxPreference>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="joy"
+            android:title="Joy"
+            android:summary="Enable or disable detecting joy">
+
+        </CheckBoxPreference>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="joy"
+            android:title="Joy"
+            android:summary="Enable or disable detecting joy">
+
+        </CheckBoxPreference>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="joy"
+            android:title="Joy"
+            android:summary="Enable or disable detecting joy">
+
+        </CheckBoxPreference>
+
+    </PreferenceCategory>
+
+
+
+</PreferenceScreen>

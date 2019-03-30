@@ -4,11 +4,15 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -16,18 +20,26 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.ToggleButton;
+import android.widget.Toast;
 
 import com.affectiva.android.affdex.sdk.Frame;
 import com.affectiva.android.affdex.sdk.detector.CameraDetector;
 import com.affectiva.android.affdex.sdk.detector.Detector;
 import com.affectiva.android.affdex.sdk.detector.Face;
+import com.shiang.depressiondetect.vokaturi.vokaturisdk.AudioListenerService;
+import com.shiang.depressiondetect.vokaturi.vokaturisdk.UpdatableActivity;
 
 import vokaturi.vokaturisdk.entities.EmotionProbabilities;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,12 +52,13 @@ import java.util.List;
  */
 public class MainActivity extends Activity implements Detector.ImageListener, CameraDetector.CameraEventListener, UpdatableActivity {
 
-    final String LOG_TAG = "shiangMessage";
+    final String LOG_TAG = "DepressionDetect";
 
     private AudioListenerService audioListenerService = AudioListenerService.getInstance();
 
-    Button startSDKButton;
-    ToggleButton toggleButton;
+    FloatingActionButton startSDKButton;
+    FloatingActionButton cameraButton;
+    FloatingActionButton settingButton;
     Button surfaceViewVisibilityButton;
 
     TextView joyTextView;
@@ -67,6 +80,11 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
     TextView audioSadnessTextView;
     TextView audioFearTextView;
 
+    TextView[] metricNames;
+    TextView[] metricValues;
+
+    GraphView graphView;
+
 
     SurfaceView cameraPreview;
 
@@ -74,14 +92,18 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
     boolean isSDKStarted = false;
     private boolean cameraPermissionsAvailable = false;
     private boolean audioPermissionAvailable = false;
+    private boolean storagePermissionAvailable = false;
     private boolean isFrontFacingCameraDetected = true;
     private boolean isBackFacingCameraDetected = true;
     private static final int CAMERA_PERMISSIONS_REQUEST = 42;
     private static final int AUDIO_PERMISSIONS_REQUEST = 5;
+    private static final int EXTERNAL_STORAGE_PERMISSIONS_REQUEST = 73;
+    public static final int NUM_METRICS_DESPLAYED = 6;
 
     RelativeLayout mainLayout;
 
     CameraDetector detector;
+    CameraDetector.CameraType cameraType;
 
     int previewWidth = 0;
     int previewHeight = 0;
@@ -91,7 +113,7 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        joyTextView = findViewById(R.id.joy_textview);
+        /*joyTextView = findViewById(R.id.joy_textview);
         sadnessTextView = findViewById(R.id.sadness_textview);
         angerTextView = findViewById(R.id.anger_textView);
         contemptTextView = findViewById(R.id.contempt_textView);
@@ -99,7 +121,7 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
         engagementTextView = findViewById(R.id.engagement_textView);
         fearTextView = findViewById(R.id.fear_textView);
         surpriseTextView = findViewById(R.id.surprise_textView);
-        valenceTextView = findViewById(R.id.valence_textView);
+        valenceTextView = findViewById(R.id.valence_textView);*/
 
         ageTextView = findViewById(R.id.age_textview);
         ethnicityTextView = findViewById(R.id.ethnicity_textview);
@@ -110,36 +132,71 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
         audioSadnessTextView = findViewById(R.id.audio_sadness_textview);
         audioFearTextView = findViewById(R.id.audio_fear_textview);
 
+        graphView = findViewById(R.id.graph_view);
+
+        metricNames = new TextView[NUM_METRICS_DESPLAYED];
+        metricNames[0] = findViewById(R.id.metric_name_0);
+        metricNames[1] = findViewById(R.id.metric_name_1);
+        metricNames[2] = findViewById(R.id.metric_name_2);
+        metricNames[3] = findViewById(R.id.metric_name_3);
+        metricNames[4] = findViewById(R.id.metric_name_4);
+        metricNames[5] = findViewById(R.id.metric_name_5);
+
+        metricValues = new TextView[NUM_METRICS_DESPLAYED];
+        metricValues[0] = findViewById(R.id.metric_value_0);
+        metricValues[1] = findViewById(R.id.metric_value_1);
+        metricValues[2] = findViewById(R.id.metric_value_2);
+        metricValues[3] = findViewById(R.id.metric_value_3);
+        metricValues[4] = findViewById(R.id.metric_value_4);
+        metricValues[5] = findViewById(R.id.metric_value_5);
+
+
         try {
             audioListenerService.updatableActivities.add(this);
-            audioListenerService.start();;
+            audioListenerService.start();
         } catch (Exception e) {
             Log.e(LOG_TAG, e.getMessage());
         }
 
         startSDKButton = findViewById(R.id.sdk_start_button);
-        startSDKButton.setText(R.string.startCamera);
         startSDKButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isSDKStarted) {
                     isSDKStarted = false;
                     stopDetector();
-                    startSDKButton.setText(R.string.startCamera);
                 } else {
                     isSDKStarted = true;
                     startDetector();
-                    startSDKButton.setText(R.string.stopCamera);
+
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd"); // 2019_01_01
+                    SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss zzzz"); // 2019.01.01 at 12:01:01 Mountain Daylight Time
+                    Date now = new Date();
+                    String fileName = dateFormat.format(now) + ".txt";
+                    String fileContent = timeFormat.format(now);
+                    saveDataOnExternalStorage( getApplicationContext(), fileName, fileContent);
+                    Toast.makeText(getApplicationContext(), "Text file has been created", Toast.LENGTH_LONG).show();
+
+                    checkForStoragePermissions();
                 }
             }
         });
 
-        toggleButton = findViewById(R.id.front_back_toggle_button);
-        toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        cameraType = CameraDetector.CameraType.CAMERA_FRONT;
+        cameraButton = findViewById(R.id.camera_button);
+        cameraButton.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                isCameraBack = isChecked;
-                switchCamera(isCameraBack? CameraDetector.CameraType.CAMERA_BACK : CameraDetector.CameraType.CAMERA_FRONT);
+            public void onClick(View v) {
+                switchCamera(cameraType == CameraDetector.CameraType.CAMERA_FRONT? CameraDetector.CameraType.CAMERA_BACK : CameraDetector.CameraType.CAMERA_FRONT);
+            }
+        });
+
+        settingButton = findViewById(R.id.setting_button);
+        settingButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SettingHeadersActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -172,17 +229,17 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
         };
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.CENTER_IN_PARENT,RelativeLayout.TRUE);
-        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,RelativeLayout.TRUE);
+        params.addRule(RelativeLayout.ALIGN_PARENT_TOP,RelativeLayout.TRUE);
         cameraPreview.setLayoutParams(params);
         mainLayout.addView(cameraPreview,0);
 
-
-
+        //Marked!!! Couldn't change the order here. Has some problem with function checkForAudioPermissions(). Needs to be solved!
         checkForCameraPermissions();
         checkForAudioPermissions();
+        //checkForStoragePermissions();
 
 
-        detector = new CameraDetector(this, CameraDetector.CameraType.CAMERA_FRONT, cameraPreview);
+        detector = new CameraDetector(this, cameraType, cameraPreview);
         detector.setDetectAllEmotions(true);
         detector.setDetectAge(true);
         detector.setDetectEthnicity(true);
@@ -228,7 +285,7 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
                 ContextCompat.checkSelfPermission(getApplicationContext(),
                         Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
 
-        if (!cameraPermissionsAvailable) {
+        if (!cameraPermissionsAvailable) {              // Marked!!! Couldn't use audioPermissionAvailable at here . Have no idea. Need to be fixed!
             showPermissionExplanationDialog(AUDIO_PERMISSIONS_REQUEST);
         } else {
             requestAudioPermissions();
@@ -241,6 +298,28 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
                     MainActivity.this,
                     new String[]{Manifest.permission.RECORD_AUDIO},
                     AUDIO_PERMISSIONS_REQUEST
+            );
+        }
+    }
+
+    private void checkForStoragePermissions(){
+        storagePermissionAvailable =
+                ContextCompat.checkSelfPermission(getApplicationContext(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+
+        if (!storagePermissionAvailable) {
+            showPermissionExplanationDialog(EXTERNAL_STORAGE_PERMISSIONS_REQUEST);
+        } else {
+            requestStoragePermissions();
+        }
+    }
+
+    private void requestStoragePermissions(){
+        if (!storagePermissionAvailable) {
+            ActivityCompat.requestPermissions(
+                    MainActivity.this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    EXTERNAL_STORAGE_PERMISSIONS_REQUEST
             );
         }
     }
@@ -274,6 +353,17 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
                             requestAudioPermissions();
                         }
                     });
+        } else if (requestCode == EXTERNAL_STORAGE_PERMISSIONS_REQUEST) {
+            alertDialogBuilder
+                    .setMessage(getResources().getString(R.string.permissions_storage_needed_explanation))
+                    .setCancelable(false)
+                    .setPositiveButton(getResources().getString(R.string.understood), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            requestStoragePermissions();
+                        }
+                    });
         }
 
         // create alert dialog
@@ -287,9 +377,17 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
     @Override
     protected void onResume() {
         super.onResume();
+        restoreApplicationSettings();
+        audioListenerService.start();
         if (isSDKStarted) {
             startDetector();
         }
+    }
+
+    private void restoreApplicationSettings() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+
     }
 
     @Override
@@ -319,37 +417,48 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
     }
 
     void switchCamera(CameraDetector.CameraType type) {
-        detector.setCameraType(type);
+        if(cameraType != type) {
+            switch (type) {
+                case CAMERA_BACK:
+                    cameraType = CameraDetector.CameraType.CAMERA_BACK;
+                    break;
+                case CAMERA_FRONT:
+                    cameraType = CameraDetector.CameraType.CAMERA_FRONT;
+                    break;
+                default:
+                    Log.e(LOG_TAG, "Unkown camera type selected");
+            }
+        }
+
+        detector.setCameraType(cameraType);
     }
 
     @SuppressLint("DefaultLocale")
     @Override
     public void onImageResults(List<Face> list, Frame frame, float v) {
-        if (list == null)
+        if (list == null){
             return;
-        if (list.size() == 0) {
-            joyTextView.setText(R.string.noFace);
-            sadnessTextView.setText("");
-            angerTextView.setText("");
-            contemptTextView.setText("");
-            disgustTextView.setText("");
-            engagementTextView.setText("");
-            fearTextView.setText("");
-            surpriseTextView.setText("");
-            valenceTextView.setText("");
-            ageTextView.setText("");
+        }
+
+        if (list.size() <= 0) {
+            ageTextView.setText(R.string.noFace);
             ethnicityTextView.setText("");
         } else {
             Face face = list.get(0);
-            joyTextView.setText(String.format("JOY\n%.2f",face.emotions.getJoy()));
-            sadnessTextView.setText(String.format("SADNESS\n%.2f",face.emotions.getSadness()));
-            angerTextView.setText(String.format("ANGER\n%.2f",face.emotions.getAnger()));
-            contemptTextView.setText(String.format("CONTEMPT\n%.2f",face.emotions.getContempt()));
-            disgustTextView.setText(String.format("DISGUST\n%.2f",face.emotions.getDisgust()));
-            engagementTextView.setText(String.format("ENGAGEMENT\n%.2f",face.emotions.getEngagement()));
-            fearTextView.setText(String.format("FEAR\n%.2f",face.emotions.getFear()));
-            surpriseTextView.setText(String.format("SURPRISE\n%.2f",face.emotions.getSurprise()));
-            valenceTextView.setText(String.format("VALENCE\n%.2f",face.emotions.getValence()));
+            //joyTextView.setText(String.format("JOY\n%.2f",face.emotions.getJoy()));
+            //sadnessTextView.setText(String.format("SADNESS\n%.2f",face.emotions.getSadness()));
+            //angerTextView.setText(String.format("ANGER\n%.2f",face.emotions.getAnger()));
+            //contemptTextView.setText(String.format("CONTEMPT\n%.2f",face.emotions.getContempt()));
+            //disgustTextView.setText(String.format("DISGUST\n%.2f",face.emotions.getDisgust()));
+            //engagementTextView.setText(String.format("ENGAGEMENT\n%.2f",face.emotions.getEngagement()));
+            //fearTextView.setText(String.format("FEAR\n%.2f",face.emotions.getFear()));
+            //surpriseTextView.setText(String.format("SURPRISE\n%.2f",face.emotions.getSurprise()));
+            //valenceTextView.setText(String.format("VALENCE\n%.2f",face.emotions.getValence()));
+
+            for(TextView textView: metricValues){
+                    updateMetricValue(textView, face);
+            }
+
             switch (face.appearance.getAge()) {
                 case AGE_UNKNOWN:
                     ageTextView.setText("");
@@ -398,7 +507,39 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
                     break;
             }
 
+            ArrayList<Float> happinessValues = graphView.facialValues;
+
+            if (happinessValues.size() > GraphView.MaxNumberOfGraphPoints) {
+                happinessValues.remove(0);
+            }
+
+            float hValues = (float) face.emotions.getJoy();
+            happinessValues.add(hValues);
+
+            if (graphView != null) {
+                graphView.invalidate();
+            }
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd");
+            Date now = new Date();
+            String fileNameString = dateFormat.format(now)+".txt";  // to create text file like 2019_01_01.txt
+            String fileContentString = String.format("Ethnicity \t\t %s \t\t", face.appearance.getEthnicity()) +
+                    String.format("Age \t\t %s \t\t",face.appearance.getAge()) +
+                    String.format("JOY \t\t %.2f \t\t",face.emotions.getJoy()) +
+                    String.format("SADNESS \t\t %.2f \t\t",face.emotions.getSadness()) +
+                    String.format("ANGER \t\t %.2f \t\t",face.emotions.getAnger()) +
+                    String.format("CONTEMPT \t\t %.2f \t\t",face.emotions.getContempt()) +
+                    String.format("DISGUST \t\t %.2f \t\t",face.emotions.getDisgust()) +
+                    String.format("ENGAGEMENT \t\t %.2f \t\t",face.emotions.getEngagement()) +
+                    String.format("FEAR \t\t %.2f \t\t",face.emotions.getFear()) +
+                    String.format("SURPRISE \t\t %.2f \t\t",face.emotions.getSurprise()) +
+                    String.format("VALENCE \t\t %.2f \t\t",face.emotions.getValence());
+            saveDataOnExternalStorage(this, fileNameString, fileContentString);
         }
+    }
+
+    void updateMetricValue(TextView textView, Face face){
+
     }
 
     @SuppressWarnings("SuspiciousNameCombination")
@@ -421,5 +562,65 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
         audioAngerTextView.setText(String.format("Anger\n%.2f",(float)emotionProbabilities.anger));
         audioSadnessTextView.setText(String.format("Sadness\n%.2f",(float)emotionProbabilities.sadness));
         audioFearTextView.setText(String.format("Fear\n%.2f",(float)emotionProbabilities.fear));
+
+        ArrayList<Float> happinessValues = graphView.voiceValues;
+
+        if (happinessValues.size() > GraphView.MaxNumberOfGraphPoints) {
+            happinessValues.remove(0);
+        }
+
+        float hValues = (float) emotionProbabilities.happiness;
+        happinessValues.add(hValues);
+
+        if (graphView != null) {
+            graphView.invalidate();
+        }
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd");
+        Date now = new Date();
+        String fileNameString = dateFormat.format(now)+".txt";  // to create text file like 2019_01_01.txt
+        String fileContentString = String.format("HAPPINESS \t\t %.2f \t\t ",(float)emotionProbabilities.happiness) +
+                String.format("NEUTRALITY \t\t %.2f \t\t ",(float)emotionProbabilities.neutrality) +
+                String.format("ANGER \t\t %.2f \t\t ",(float)emotionProbabilities.anger) +
+                String.format("SADNESS \t\t %.2f \t\t ",(float)emotionProbabilities.sadness) +
+                String.format("FEAR \t\t %.2f \t\t ",(float)emotionProbabilities.fear);
+        saveDataOnExternalStorage(this, fileNameString, fileContentString);
+    }
+
+
+    /**
+     * This function is to create and write a file and save it to the public external storage.
+     * @param context context of the activity
+     * @param sFileName The file name that will be saved to.
+     * @param sBody The content that will be saved
+     */
+    public void saveDataOnExternalStorage(Context context, String sFileName, String sBody){
+        if (!isExternalStorageWritable()){
+            Toast.makeText(context, "External Storage Not Writable", Toast.LENGTH_LONG).show();
+        }
+
+        try {
+            // to create folder in external storage
+            File root = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),"Data");
+            // if folder does not exist, create it
+            if (!root.exists()){
+                root.mkdirs();
+            }
+
+            File file = new File(root, sFileName);
+            // to write on the file
+            FileWriter writer = new FileWriter(file, true);
+            writer.append(sBody+"\n\n");
+            writer.flush();
+            writer.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+   }
+
+    public boolean isExternalStorageWritable(){
+        String storageState = Environment.getExternalStorageState();
+
+        return Environment.MEDIA_MOUNTED.equals(storageState);
     }
 }

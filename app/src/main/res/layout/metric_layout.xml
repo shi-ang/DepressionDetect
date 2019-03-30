@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true"
+    android:background="@color/transparent_overlay"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <LinearLayout
+        android:id="@+id/left_metrics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/metric_name_0"
+            style="@style/metricName"
+            tools:text="joy"/>
+
+        <TextView
+            android:id="@+id/metric_value_0"
+            style="@style/metricValue"
+            tools:text="100"/>
+
+        <TextView
+            android:id="@+id/metric_name_1"
+            style="@style/metricName"
+            tools:text="joy"/>
+
+        <TextView
+            android:id="@+id/metric_value_1"
+            style="@style/metricValue"
+            tools:text="100"/>
+        <TextView
+            android:id="@+id/metric_name_2"
+            style="@style/metricName"
+            tools:text="joy"/>
+
+        <TextView
+            android:id="@+id/metric_value_2"
+            style="@style/metricValue"
+            tools:text="100"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/right_metrics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/metric_name_3"
+            style="@style/metricName"
+            tools:text="joy"/>
+
+        <TextView
+            android:id="@+id/metric_value_3"
+            style="@style/metricValue"
+            tools:text="100"/>
+
+        <TextView
+            android:id="@+id/metric_name_4"
+            style="@style/metricName"
+            tools:text="joy"/>
+
+        <TextView
+            android:id="@+id/metric_value_4"
+            style="@style/metricValue"
+            tools:text="100"/>
+        <TextView
+            android:id="@+id/metric_name_5"
+            style="@style/metricName"
+            tools:text="joy"/>
+
+        <TextView
+            android:id="@+id/metric_value_5"
+            style="@style/metricValue"
+            tools:text="100"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/age_textview"
+            style="@style/metricName"
+            tools:text="age" />
+
+        <TextView
+            android:id="@+id/ethnicity_textview"
+            style="@style/metricName"
+            tools:text="ethnicity" />
+    </LinearLayout>
+
+    <!--<LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/joy_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:lines="2"
+            android:textColor="@color/fireBrick"
+            tools:text="joy" />
+
+        <TextView
+            android:id="@+id/sadness_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:lines="2"
+            android:textColor="@color/fireBrick"
+            tools:text="sadness" />
+
+        <TextView
+            android:id="@+id/anger_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:lines="2"
+            android:textColor="@color/fireBrick"
+            tools:text="anger" />
+
+        <TextView
+            android:id="@+id/contempt_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:lines="2"
+            android:textColor="@color/fireBrick"
+            tools:text="contempt" />
+
+        <TextView
+            android:id="@+id/disgust_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:lines="2"
+            android:textColor="@color/fireBrick"
+            tools:text="disgust" />
+
+        <TextView
+            android:id="@+id/engagement_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:lines="2"
+            android:textColor="@color/fireBrick"
+            tools:text="engagement" />
+
+        <TextView
+            android:id="@+id/fear_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:lines="2"
+            android:textColor="@color/fireBrick"
+            tools:text="fear" />
+
+        <TextView
+            android:id="@+id/surprise_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:lines="2"
+            android:textColor="@color/fireBrick"
+            tools:text="surprise" />
+
+        <TextView
+            android:id="@+id/valence_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:lines="2"
+            android:textColor="@color/fireBrick"
+            tools:text="valence" />
+
+    </LinearLayout>
+-->
+
+
+</RelativeLayout>
