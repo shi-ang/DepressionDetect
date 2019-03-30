@@ -394,6 +394,7 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
     protected void onPause() {
         super.onPause();
         stopDetector();
+        audioListenerService.cleanup();
     }
 
     void startDetector() {
@@ -615,7 +616,16 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
             File file = new File(root, sFileName);
             // to write on the file
             FileWriter writer = new FileWriter(file, true);
-            writer.append(sBody+"\n\n");
+            writer.append(sBody);
+            writer.append(System.getProperty("line.separator"));
+            writer.append(System.getProperty("line.separator"));
+            /**
+             * System.getProperty("line.separator") returns the OS dependent line separator.
+             *
+             * On Windows it returns "\r\n", on Unix "\n", on MacOS "\r"
+             * So if you want to generate a file with line endings for the current operating systems
+             * use System.getProperty("line.separator") or write using a PrintWriter.
+             */
             writer.flush();
             writer.close();
         } catch (Exception e){
