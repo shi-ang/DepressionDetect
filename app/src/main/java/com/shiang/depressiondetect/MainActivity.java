@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -20,6 +21,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,14 +43,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
- * This is a very bare sample app to demonstrate the usage of the CameraDetector object from Affectiva.
- * It displays statistics on frames per second, percentage of time a face was detected, and the user's smile score.
+ * This is a sample app to use CameraDetector object from Affectiva and audioListenerService from Vokaturi.
+ * It displays statistics on frames per second, percentage of time a face was detected, and the user's emotion score.
  *
  * The app shows off the maneuverability of the SDK by allowing the user to start and stop the SDK and also hide the camera SurfaceView.
  *
- * For use with SDK 2.02
+ *
  */
 public class MainActivity extends Activity implements Detector.ImageListener, CameraDetector.CameraEventListener, UpdatableActivity {
 
@@ -59,9 +62,9 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
     FloatingActionButton startSDKButton;
     FloatingActionButton cameraButton;
     FloatingActionButton settingButton;
-    Button surfaceViewVisibilityButton;
+    //Button surfaceViewVisibilityButton;
 
-    TextView joyTextView;
+    /*TextView joyTextView;
     TextView sadnessTextView;
     TextView angerTextView;
     TextView contemptTextView;
@@ -69,10 +72,11 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
     TextView engagementTextView;
     TextView fearTextView;
     TextView surpriseTextView;
-    TextView valenceTextView;
+    TextView valenceTextView;*/
 
     TextView ageTextView;
     TextView ethnicityTextView;
+    Chronometer timer;
 
     TextView audioHappinessTextView;
     TextView audioNeutralityTextView;
@@ -85,11 +89,11 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
 
     GraphView graphView;
 
-
     SurfaceView cameraPreview;
 
     boolean isCameraBack = false;
     boolean isSDKStarted = false;
+    int file_index = 0;
     private boolean cameraPermissionsAvailable = false;
     private boolean audioPermissionAvailable = false;
     private boolean storagePermissionAvailable = false;
@@ -105,6 +109,8 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
     CameraDetector detector;
     CameraDetector.CameraType cameraType;
 
+    SharedPreferences myPref;
+    SharedPreferences.Editor editor;
     int previewWidth = 0;
     int previewHeight = 0;
 
@@ -113,6 +119,8 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        myPref = this.getSharedPreferences("mypref", 0);
+        editor = myPref.edit();
         /*joyTextView = findViewById(R.id.joy_textview);
         sadnessTextView = findViewById(R.id.sadness_textview);
         angerTextView = findViewById(R.id.anger_textView);
@@ -125,6 +133,7 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
 
         ageTextView = findViewById(R.id.age_textview);
         ethnicityTextView = findViewById(R.id.ethnicity_textview);
+        timer = findViewById(R.id.timer);
 
         audioHappinessTextView = findViewById(R.id.audio_happiness_textview);
         audioNeutralityTextView = findViewById(R.id.audio_neutrality_textview);
@@ -150,10 +159,11 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
         metricValues[4] = findViewById(R.id.metric_value_4);
         metricValues[5] = findViewById(R.id.metric_value_5);
 
-
+        // Add an audioListenerService
+        // Start the audioListenerService
         try {
             audioListenerService.updatableActivities.add(this);
-            audioListenerService.start();
+
         } catch (Exception e) {
             Log.e(LOG_TAG, e.getMessage());
         }
@@ -165,15 +175,39 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
                 if (isSDKStarted) {
                     isSDKStarted = false;
                     stopDetector();
+                    startSDKButton.setImageResource(R.drawable.ic_action_play);
+                    timer.stop();
+                    timer.setBase(SystemClock.elapsedRealtime());
+                    //pause audio recording (audioListenerService.stop() is add by Shiang, not the API provider)
+                    audioListenerService.stop();
                 } else {
                     isSDKStarted = true;
                     startDetector();
+                    startSDKButton.setImageResource(R.drawable.ic_action_pause);
+                    timer.setBase(SystemClock.elapsedRealtime());
+                    timer.start();
 
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd"); // 2019_01_01
-                    SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss zzzz"); // 2019.01.01 at 12:01:01 Mountain Daylight Time
+                    audioListenerService.start();
+
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd", Locale.US); // 2019_01_01
+                    SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss zzzz", Locale.US); // 2019.01.01 at 12:01:01 Mountain Daylight Time
                     Date now = new Date();
-                    String fileName = dateFormat.format(now) + ".txt";
+
+                    /*String newDate = dateFormat.format(now);
+                    if(newDate.equals(recordDate)) {
+                        file_index ++;
+                    }else{
+                        file_index = 0;
+                        recordDate = newDate;
+                    }*/
+                    file_index ++;
+                    editor.putInt("file_index", file_index);
+                    editor.commit();
+
+                    String fileName = dateFormat.format(now) + String.format("_%d", file_index) + ".txt";
+
                     String fileContent = timeFormat.format(now);
+
                     saveDataOnExternalStorage( getApplicationContext(), fileName, fileContent);
                     Toast.makeText(getApplicationContext(), "Text file has been created", Toast.LENGTH_LONG).show();
 
@@ -188,6 +222,7 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
             @Override
             public void onClick(View v) {
                 switchCamera(cameraType == CameraDetector.CameraType.CAMERA_FRONT? CameraDetector.CameraType.CAMERA_BACK : CameraDetector.CameraType.CAMERA_FRONT);
+
             }
         });
 
@@ -195,12 +230,14 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
         settingButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),"Toast",Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(MainActivity.this, SettingHeadersActivity.class);
                 startActivity(intent);
             }
         });
 
-        //We create a custom SurfaceView that resizes itself to match the aspect ratio of the incoming camera frames
+        // We create a custom SurfaceView that resizes itself to match the aspect ratio of the
+        // incoming camera frames
         mainLayout = findViewById(R.id.main_layout);
         cameraPreview = new SurfaceView(this) {
             @Override
@@ -233,7 +270,11 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
         cameraPreview.setLayoutParams(params);
         mainLayout.addView(cameraPreview,0);
 
-        //Marked!!! Couldn't change the order here. Has some problem with function checkForAudioPermissions(). Needs to be solved!
+        // Marked!!!
+        // Couldn't change the order here.
+        // Has some problem with function checkForAudioPermissions().
+        // Needs to be solved!
+        // checkForStoragePermission() is used when press starSDKButton
         checkForCameraPermissions();
         checkForAudioPermissions();
         //checkForStoragePermissions();
@@ -378,9 +419,10 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
     protected void onResume() {
         super.onResume();
         restoreApplicationSettings();
-        audioListenerService.start();
+        file_index = myPref.getInt("file_index", 0);
         if (isSDKStarted) {
             startDetector();
+            audioListenerService.start();
         }
     }
 
@@ -394,6 +436,11 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
     protected void onPause() {
         super.onPause();
         stopDetector();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
         audioListenerService.cleanup();
     }
 
@@ -442,7 +489,8 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
         }
 
         if (list.size() <= 0) {
-            ageTextView.setText(R.string.noFace);
+            //ageTextView.setText(R.string.noFace);
+            ageTextView.setText("");
             ethnicityTextView.setText("");
         } else {
             Face face = list.get(0);
@@ -455,11 +503,25 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
             //fearTextView.setText(String.format("FEAR\n%.2f",face.emotions.getFear()));
             //surpriseTextView.setText(String.format("SURPRISE\n%.2f",face.emotions.getSurprise()));
             //valenceTextView.setText(String.format("VALENCE\n%.2f",face.emotions.getValence()));
+            metricNames[0].setText("JOY");
+            metricNames[1].setText("SADNESS");
+            metricNames[2].setText("ANGER");
+            metricNames[3].setText("DISGUST");
+            metricNames[4].setText("FEAR");
+            metricNames[5].setText("SURPRISE");
+
+            metricValues[0].setText(String.format("%.2f", face.emotions.getJoy()));
+            metricValues[1].setText(String.format("%.2f", face.emotions.getSadness()));
+            metricValues[2].setText(String.format("%.2f", face.emotions.getAnger()));
+            metricValues[3].setText(String.format("%.2f", face.emotions.getDisgust()));
+            metricValues[4].setText(String.format("%.2f", face.emotions.getFear()));
+            metricValues[5].setText(String.format("%.2f", face.emotions.getSurprise()));
 
             for(TextView textView: metricValues){
                     updateMetricValue(textView, face);
             }
 
+            /*
             switch (face.appearance.getAge()) {
                 case AGE_UNKNOWN:
                     ageTextView.setText("");
@@ -507,6 +569,7 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
                     ethnicityTextView.setText(R.string.ethnicity_hispanic);
                     break;
             }
+            */
 
             ArrayList<Float> happinessValues = graphView.facialValues;
 
@@ -514,16 +577,16 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
                 happinessValues.remove(0);
             }
 
-            float hValues = (float) face.emotions.getJoy();
+            float hValues = face.emotions.getJoy();
             happinessValues.add(hValues);
 
             if (graphView != null) {
                 graphView.invalidate();
             }
 
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd", Locale.US);
             Date now = new Date();
-            String fileNameString = dateFormat.format(now)+".txt";  // to create text file like 2019_01_01.txt
+            String fileNameString = dateFormat.format(now)+ String.format("_%d", file_index) + ".txt";  // to create text file like 2019_01_01.txt
             String fileContentString = String.format("Ethnicity \t\t %s \t\t", face.appearance.getEthnicity()) +
                     String.format("Age \t\t %s \t\t",face.appearance.getAge()) +
                     String.format("JOY \t\t %.2f \t\t",face.emotions.getJoy()) +
@@ -582,9 +645,9 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
             graphView.invalidate();
         }
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd", Locale.US);
         Date now = new Date();
-        String fileNameString = dateFormat.format(now)+".txt";  // to create text file like 2019_01_01.txt
+        String fileNameString = dateFormat.format(now)+String.format("_%d", file_index) + ".txt";  // to create text file like 2019_01_01.txt
         String fileContentString = String.format("HAPPINESS \t\t %.2f \t\t ",(float)emotionProbabilities.happiness) +
                 String.format("NEUTRALITY \t\t %.2f \t\t ",(float)emotionProbabilities.neutrality) +
                 String.format("ANGER \t\t %.2f \t\t ",(float)emotionProbabilities.anger) +
@@ -619,17 +682,16 @@ public class MainActivity extends Activity implements Detector.ImageListener, Ca
             writer.append(sBody);
             writer.append(System.getProperty("line.separator"));
             writer.append(System.getProperty("line.separator"));
-            /**
-             * System.getProperty("line.separator") returns the OS dependent line separator.
-             *
-             * On Windows it returns "\r\n", on Unix "\n", on MacOS "\r"
-             * So if you want to generate a file with line endings for the current operating systems
-             * use System.getProperty("line.separator") or write using a PrintWriter.
-             */
+
+            // System.getProperty("line.separator") returns the OS dependent line separator.
+            // On Windows it returns "\r\n", on Unix "\n", on MacOS "\r"
+            // So if you want to generate a file with line endings for the current operating systems
+            // use System.getProperty("line.separator") or write using a PrintWriter.
+            // Reference: https://stackoverflow.com/questions/8975085/printing-a-new-line-in-a-file-in-java
             writer.flush();
             writer.close();
         } catch (Exception e){
-            e.printStackTrace();
+            Log.e(LOG_TAG, e.getMessage());
         }
    }
 

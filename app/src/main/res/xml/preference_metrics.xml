@@ -1,15 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <Preference
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="fps"
+        android:summary="Display the actual processed frames per second"
+        android:title="Show FPS" />
+    <EditTextPreference
+        android:defaultValue="20"
+        android:dialogTitle="Processed Frames Per Second"
+        android:ems="3"
+        android:inputType="number"
+        android:key="rate"
+        android:maxLength="2"
+        android:summary="Set the desired processed frames per second"
+        android:title="Set Target FPS" />
+
+    <!--<Preference
         android:selectable="false"
-        android:layout="@layout/activity_setting">
+        android:layout="@layout/fragment_setting">
 
     </Preference>
+
 
     <PreferenceCategory
         android:key="emotion"
         android:title="Emotion Category">
+
 
         <CheckBoxPreference
             android:defaultValue="true"
@@ -17,13 +34,13 @@
             android:title="JOY"
             android:summary="Enable or disable detecting joy"/>
 
-        <!--
+
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="joy"
             android:title="JOY"
             android:summary="Enable or disable detecting joy"/>
-        -->
+
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="anger"
@@ -162,7 +179,7 @@
         </CheckBoxPreference>
 
     </PreferenceCategory>
-
+    -->
 
 
 </PreferenceScreen>

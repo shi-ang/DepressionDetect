@@ -105,6 +105,8 @@
             android:id="@+id/ethnicity_textview"
             style="@style/metricName"
             tools:text="ethnicity" />
+
+
     </LinearLayout>
 
     <!--<LinearLayout

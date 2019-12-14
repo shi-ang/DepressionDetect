@@ -11,34 +11,48 @@
         android:id="@+id/facial_metric_layout"
         layout="@layout/metric_layout"/>
 
+    <Chronometer
+        android:id="@+id/timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_below="@+id/facial_metric_layout"
+        android:layout_centerInParent="true"
+        android:format="%s"
+        android:textColor="@color/red"
+        android:textSize="@dimen/timer_size"/>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/sdk_start_button"
-        android:layout_width="wrap_content"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_above="@id/camera_button"
-        android:layout_margin="20dp"
-        android:src="@drawable/ic_baseline_play_arrow_24px"
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_action_play"
+        app:fabSize="mini"
         app:backgroundTint="@color/button_color" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/camera_button"
-        android:layout_width="wrap_content"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_above="@id/setting_button"
-        android:layout_margin="20dp"
-        android:src="@drawable/ic_baseline_switch_camera_24px"
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_action_flip_camera"
+        app:fabSize="mini"
         app:backgroundTint="@color/button_color" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/setting_button"
-        android:layout_width="wrap_content"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_above="@id/graph_view"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:src="@drawable/ic_baseline_settings_20px"
+        app:fabSize="mini"
         app:backgroundTint="@color/button_color" />
 
     <LinearLayout

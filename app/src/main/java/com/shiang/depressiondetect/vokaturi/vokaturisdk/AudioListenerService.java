@@ -164,6 +164,14 @@ public class AudioListenerService
     }
 
     /**
+     * Stop recording the audio data
+     * Add by Shiang
+     */
+    public synchronized void stop()
+    {
+        audioRecorder.stop();
+    }
+    /**
      * Asynchronous task for processing the audio data via the sdk. We do this to avoid prcessing on the main thread and freezing the application
      */
     public class ProcessAudioDataTask extends AsyncTask<EmotionProbabilities, Void, EmotionProbabilities> {

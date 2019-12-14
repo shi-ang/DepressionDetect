@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <!--xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".SettingActivity"-->
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:textSize="18sp"
+        android:text="@string/choose_metrics_message"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="5dp"
+        >
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/clear_all"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:id="@+id/clear_all_button"
+            android:onClick="clearAllItem"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/clear_all_button"
+            android:textSize="18sp"
+            android:id="@+id/metrics_chooser_textview"
+            android:text="@string/metric_chooser_default_message"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
+
+    <!-- Preference should place its actual preference widget here.
+    <ListView
+        android:id="@+id/list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+    </ListView>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Emotion Category"
+            android:textSize="18sp"/>
+
+        <CheckBox
+            android:id="@+id/joy_checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="JOY"
+            android:textSize="18sp"
+            android:checked="true" />
+
+        <CheckBox
+            android:id="@+id/anger_checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ANGER"
+            android:textSize="18sp"
+            android:checked="true" />
+
+        <CheckBox
+            android:id="@+id/fear_checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="FEAR"
+            android:textSize="18sp"
+            android:checked="true" />
+
+        <CheckBox
+            android:id="@+id/disgust_checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="DISGUST"
+            android:textSize="18sp"
+            android:checked="true" />
+
+        <CheckBox
+            android:id="@+id/sadness_checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SADNESS"
+            android:textSize="18sp"
+            android:checked="true" />
+
+        <CheckBox
+            android:id="@+id/surprise_checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SURPRISE"
+            android:textSize="18sp"
+            android:checked="true" />
+
+        <CheckBox
+            android:id="@+id/contempt_checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CONTEMPT"
+            android:textSize="18sp"
+            android:checked="false" />
+
+        <CheckBox
+            android:id="@+id/engagement_checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ENGAGEMENT"
+            android:textSize="18sp"
+            android:checked="false" />
+
+        <CheckBox
+            android:id="@+id/valence_checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="VALENCE"
+            android:textSize="18sp"
+            android:checked="false" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Expression Category"
+            android:textSize="18sp"/>
+
+        <CheckBox
+            android:id="@+id/smile_checkbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Smile"
+            android:textSize="18sp"
+            android:checked="false" />
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

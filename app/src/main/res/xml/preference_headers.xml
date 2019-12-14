@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
 
     <header
-        android:fragment="com.shiang.depressiondetect.SettingHeadersActivity$SettingHeadersFragment"
-        android:title="settings_title_1"
-        android:summary="setting_summary_1"/>
-</PreferenceScreen>
+        android:fragment="com.shiang.depressiondetect.SettingFragment"
+        android:title="Change detecting parameters"
+        android:summary="Setting_1"/>
+    <header
+        android:fragment="com.shiang.depressiondetect.MetricsSeletionFragment2"
+        android:title="Change displayed emotions"
+        android:summary="Setting_2"/>
+
+</preference-headers>

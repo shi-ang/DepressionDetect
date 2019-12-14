@@ -24,9 +24,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".SettingActivity"
-            android:parentActivityName=".MainActivity"/>
-        <activity android:name=".SettingHeadersActivity"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity">
+        </activity>
+        <activity
+            android:name=".SettingHeadersActivity"
+            android:parentActivityName=".MainActivity">
+        </activity>
     </application>
 
 </manifest>
